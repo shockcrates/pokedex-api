@@ -1,11 +1,7 @@
 import { commandExit } from "./command_exit.js";
 import { commandHelp } from "./command_help.js";
-
-export type CLICommand = {
-    name: string;
-    description: string;
-    callback: (commands: Record<string, CLICommand>) => void;
-}
+import { CLICommand } from  "./state.js"
+import { commandMap} from "./commandMap.js";
 
 export function getCommands(): Record<string, CLICommand>{
     return {
@@ -18,6 +14,11 @@ export function getCommands(): Record<string, CLICommand>{
             name: "help",
             description: "Displays a help message",
             callback: commandHelp
+        },
+        map:{
+            name: "map",
+            description: "Display the next 20 location areas in the Pokemon World.",
+            callback: commandMap
         }
     }
 }
