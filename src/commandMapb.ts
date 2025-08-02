@@ -1,19 +1,14 @@
 import type { State } from "./state.js";
-import {ShallowLocations} from "./pokeapi";
 
 
-export async function commandMap( state: State): Promise<void>{
+export async function commandMapb( state: State): Promise<void>{
 
     try
     {
-
-        let locations: ShallowLocations;
-        if (state.nextLocationsURL) {
-            locations = await state.pokeApi.fetchLocations(state.nextLocationsURL);
-        } else {
-            locations = await state.pokeApi.fetchLocations();
+        if (!state.previousLocationsURL){
+            throw Error("You're on the first page. use map.");
         }
-
+        const locations = await state.pokeApi.fetchLocations(state.previousLocationsURL)
         state.nextLocationsURL = locations.next;
         state.previousLocationsURL = locations.previous;
         for (const location of locations.results){

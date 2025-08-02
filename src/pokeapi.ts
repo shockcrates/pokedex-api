@@ -1,6 +1,6 @@
 
 export class PokeApi {
-    private static readonly baseURL = "https://pokeapi.co/api/v2";
+    private static readonly baseURL = "http://pokeapi.co/api/v2";
 
     constructor() {
     }
@@ -8,15 +8,21 @@ export class PokeApi {
     async fetchLocations(pageURL?: string): Promise<ShallowLocations>{
         let URL:string;
         if (!pageURL) {
-            URL = PokeApi.baseURL + "/location-area/";
+            URL = PokeApi.baseURL + "/location-area/?limit=20";
         } else {
             URL = pageURL;
         }
-        let response = await fetch(URL)
-        return response.json();
+        console.log(URL);
+        let response = await fetch(URL, {
+            method: "GET",
+        });
+
+        //console.log(await response.text());
+        return await response.json();
     }
     async fetchLocation(locationName: string): Promise<Location>{
-        let URL: string = `https://pokeapi.co/api/v2/location-area/${locationName}/`;
+        let URL: string = `https://pokeapi.co:443/api/v2/location-area/${locationName}/`;
+
         let response = await fetch(URL);
         return response.json();
     }
@@ -25,7 +31,7 @@ export type ShallowLocations = {
     count: number;
     next: string;
     previous: string;
-    result: [
+    results: [
         {
             name?: string;
             url: string;

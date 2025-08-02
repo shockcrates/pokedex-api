@@ -12,7 +12,7 @@ export function cleanInput(input: string): string[]{
 export function startREPL(state: State) {
 
   state.replInterface.prompt();
-  state.replInterface.on("line", (input)=> {
+  state.replInterface.on("line", async (input)=> {
     if (input.length === 0) {
       state.replInterface.prompt()
       return;
@@ -20,7 +20,7 @@ export function startREPL(state: State) {
     let words = cleanInput(input);
     if (words[0] in state.commands){
       try {
-        state.commands[words[0]].callback(state)
+        await state.commands[words[0]].callback(state)
       }
       catch (e) {
         if (e instanceof Error) {
