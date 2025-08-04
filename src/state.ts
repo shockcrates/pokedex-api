@@ -6,7 +6,7 @@ import { PokeApi } from "./pokeapi.js";
 export type CLICommand = {
     name: string;
     description: string;
-    callback: (state: State) => Promise<void>;
+    callback: (state: State, args: string[]) => Promise<void>;
 }
 
 export type State = {
@@ -22,10 +22,10 @@ export function initState(): State {
     let replInterface = readline.createInterface({
         input : process.stdin,
         output : process.stdout,
-        prompt : "Welcome to the Pokedex!\n"
+        prompt : "Pokedex > "
     });
     const commands = getCommands();
-    var pokeApi = new PokeApi();
+    const pokeApi = new PokeApi();
 
     return {replInterface: replInterface, commands: commands, pokeApi: pokeApi};
 }

@@ -17,10 +17,11 @@ export function startREPL(state: State) {
       state.replInterface.prompt()
       return;
     }
-    let words = cleanInput(input);
+    let words: string[] = cleanInput(input);
     if (words[0] in state.commands){
       try {
-        await state.commands[words[0]].callback(state)
+        const [userCommand, ...args] = words;
+        await state.commands[words[0]].callback(state, args)
       }
       catch (e) {
         if (e instanceof Error) {

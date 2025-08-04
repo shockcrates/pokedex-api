@@ -33,10 +33,23 @@ export class PokeApi {
         return data;
     }
     async fetchLocation(locationName: string): Promise<Location>{
-        let URL: string = `https://pokeapi.co:443/api/v2/location-area/${locationName}/`;
+        let URL: string = `https://pokeapi.co/api/v2/location-area/${locationName}/`;
 
-        let response = await fetch(URL);
-        return response.json();
+        const cacheResult = this.#cache.get(URL)
+        if (isCacheEntry(cacheResult)) {
+
+            return  cacheResult.val as Location;
+        }
+
+        const response = await fetch(URL,{method: "GET"});
+        if (!response.ok){
+            throw new Error(response.statusText);
+        }
+
+        const data = await response.json();
+        this.#cache.add(URL, data);
+
+        return data;
     }
 }
 export type ShallowLocations = {
