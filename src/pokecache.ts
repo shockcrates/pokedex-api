@@ -4,6 +4,10 @@ export type CacheEntry<T> = {
     val: T;
 }
 
+export function isCacheEntry<T>(entry: any): entry is CacheEntry<T> {
+    return typeof entry =="object" && "createdAt" in entry && "val" in entry;
+}
+
 export class Cache {
     #cache = new Map<string, CacheEntry<any>>;
     #reapIntervalId: NodeJS.Timeout | undefined;
@@ -23,18 +27,19 @@ export class Cache {
         //Add message for already exists
     }
 
-    get<T>(key: string): T | null {
+    get<T>(key: string): T | undefined {
         if (this.#cache.has(key)) {
             return this.#cache.get(key) as T;
         }
         else{
-            return null;
+            return undefined;
         }
     }
 
     #reap():void {
         this.#cache.forEach( (val, key, cache) =>{
             if (Date.now() - this.#interval > val.createdAt) {
+
                 cache.delete(key);
             }
 
